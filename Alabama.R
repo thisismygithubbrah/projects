@@ -19,23 +19,30 @@ ggal <- m + geom_sf(data = al,
   guides(fill = guide_legend(title = "% Vote Obama '08")) +
   theme(legend.position = 'bottom', legend.title = element_text(size = 10))
 
-pdf('plot.pdf')
-system.time(print(ggal))
-# user  system elapsed 
-# 16.209   0.078  16.336 
+library(extrafont)
+loadfonts() # loads 'Arial' font
+pdf('alabama_discrete.pdf')
+system.time(print(ggal)) # 14 seconds on 2015 MBP
 dev.off()
 
 # svg('plot.svg')
 # ggal
 # dev.off()
 # Gradient Version
-m + geom_sf(data = al, 
+ggal_gradient <- m + geom_sf(data = al, 
             aes(fill = P_08), 
             color = 'white', lwd = .02) + 
   scale_fill_gradient(low = scales::muted('red'), high = 'blue') +
   guides(fill = guide_colorbar(title = "% Vote Obama '08", barheight = unit(6, 'cm'))) +
   theme(axis.text.x = element_text(size = 7))
 
+pdf('alabama_gradient.pdf')
+system.time(print(ggal_gradient)) # 14 seconds on MBP
+dev.off()
+
+# Note: Do not use Quartz if you are on macOS, this default graphics device takes 120s+
+# Likely speed boost if you use sp rather than newer sf package. 
+  # Do this for larger, more fine-grained shapefiles like Wisconsin
 
 # Benchmarking:
 # > # Discrete Version
